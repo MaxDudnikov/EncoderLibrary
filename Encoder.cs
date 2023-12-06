@@ -45,7 +45,6 @@ namespace EncoderLibrary
             }
             return Convert.ToBase64String(array);
         }
-
         public string GetDataDecrypt(string data)
         {
             if (string.IsNullOrEmpty(data))
