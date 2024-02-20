@@ -50,21 +50,28 @@ namespace EncoderLibrary
             if (string.IsNullOrEmpty(data))
                 return string.Empty;
 
-            byte[] buffer = Convert.FromBase64String(data);
-
-            using var aes = Aes.Create();
-            aes.Key = GetKey(key);
-            aes.IV = GetIV(ivSecret);
-
-            ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-
-            using var memoryStream = new MemoryStream(buffer);
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+            try
             {
-                using (StreamReader streamReader = new StreamReader(cryptoStream))
+                byte[] buffer = Convert.FromBase64String(data);
+
+                using var aes = Aes.Create();
+                aes.Key = GetKey(key);
+                aes.IV = GetIV(ivSecret);
+
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using var memoryStream = new MemoryStream(buffer);
+                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
                 {
-                    return streamReader.ReadToEnd().Replace(salt, string.Empty);
+                    using (StreamReader streamReader = new StreamReader(cryptoStream))
+                    {
+                        return streamReader.ReadToEnd().Replace(salt, string.Empty);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
             }
         }
     }
