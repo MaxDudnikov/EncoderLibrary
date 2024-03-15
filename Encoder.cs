@@ -48,7 +48,7 @@ namespace EncoderLibrary
         public string GetDataDecrypt(string data)
         {
             if (string.IsNullOrEmpty(data))
-                return string.Empty;
+                return null;
 
             try
             {
@@ -69,9 +69,9 @@ namespace EncoderLibrary
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                return ex.ToString();
+                return null;
             }
         }
     }
